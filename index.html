@@ -150,8 +150,8 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 
 /* ---------- titoli che si ricompongono lettera per lettera ---------- */
 section > .wrap{z-index:1}
-.split .wd{display:inline-block;white-space:nowrap}
-.split .ch{display:inline-block;transform:translate3d(calc((1 - var(--p)) * var(--dx)),calc((1 - var(--p)) * var(--dy)),0) rotate(calc((1 - var(--p)) * var(--r))) scale(calc(1 + (1 - var(--p)) * var(--s)));opacity:calc(.08 + .92 * var(--p));filter:blur(calc((1 - var(--p)) * 5px))}
+.chars .wd{display:inline-block;white-space:nowrap}
+.chars .ch{display:inline-block;transform:translate3d(calc((1 - var(--p)) * var(--dx)),calc((1 - var(--p)) * var(--dy)),0) rotate(calc((1 - var(--p)) * var(--r))) scale(calc(1 + (1 - var(--p)) * var(--s)));opacity:calc(.08 + .92 * var(--p));filter:blur(calc((1 - var(--p)) * 5px))}
 
 /* forme che fluttuano in parallasse */
 .deco{position:absolute;pointer-events:none;z-index:0;will-change:transform}
@@ -187,7 +187,7 @@ section > .wrap{z-index:1}
   .inter .stage{position:relative}
   #glare{--q:.35;--t:1}
   #orbits{--q:1}
-  .split .ch{transform:none;opacity:1;filter:none}
+  .chars .ch{transform:none;opacity:1;filter:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
   [data-sc]{--p:1!important}
@@ -531,7 +531,7 @@ section > .wrap{z-index:1}
 
   /* titoli: ogni lettera parte da un punto diverso e si ricompone */
   [].slice.call(document.querySelectorAll('[data-split]')).forEach(function(h){
-    h.classList.add('split');
+    h.classList.add('chars');
     var words = h.textContent.trim().split(/\s+/);
     h.setAttribute('aria-label', h.textContent.trim());
     h.innerHTML = words.map(function(w){
