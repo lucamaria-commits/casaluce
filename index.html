@@ -1,0 +1,674 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Casa Luce</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: una pagina lunga a capitoli, nav fissa con barra di avanzamento; animazioni guidate dallo scroll (--p da 0 a 1 per ogni elemento), mai contenuti nascosti a riposo. */
+:root{
+  --bg:#F6EFE4; --paper:#FBF7F0; --ink:#1F1A2E; --text:#4A3F4F; --muted:#7E7378;
+  --line:#E5D9C7; --accent:#E0782C; --accent-ink:#A84E18; --gold:#F2A65A; --night:#1F1A2E; --night-text:#C9BFB2; --night-line:#433A52; --on-night:#F2E6D3;
+  --display:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --body:'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --sp:0; --h:0;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17131F; --paper:#211B2B; --ink:#F2E6D3; --text:#CFC4BA; --muted:#9A8F97; --line:#352C40; --accent:#E8894A; --accent-ink:#F2A65A; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17131F; --paper:#211B2B; --ink:#F2E6D3; --text:#CFC4BA; --muted:#9A8F97; --line:#352C40; --accent:#E8894A; --accent-ink:#F2A65A; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px, env(safe-area-inset-left,0px));padding-right:max(20px, env(safe-area-inset-right,0px))}
+h1,h2,h3{color:var(--ink);text-wrap:balance;margin:0}
+h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,5vw,58px);line-height:1.06}
+h3{font-size:19px;font-weight:600}
+p{margin:0;max-width:65ch}
+.eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+section{padding-block:clamp(72px,11vw,128px);position:relative;overflow:clip}
+section > .wrap{display:flex;flex-direction:column;gap:28px;position:relative}
+.lead{font-size:clamp(18px,2vw,21px)}
+
+/* ---------- motore di scroll: ogni [data-sc] riceve --p (0→1). Default 1 = stato finale. ---------- */
+[data-sc]{--p:1}
+.rv{opacity:calc(.12 + .88 * var(--p));transform:translate3d(0,calc((1 - var(--p)) * 64px),0) scale(calc(.965 + .035 * var(--p)));filter:blur(calc((1 - var(--p)) * 6px));will-change:transform,opacity}
+.rv-x{opacity:calc(.12 + .88 * var(--p));transform:translate3d(calc((1 - var(--p)) * -80px),0,0)}
+
+/* nav + progresso */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb, var(--night) 88%, transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--on-night)}
+.nav::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;transform:scaleX(var(--sp));background:linear-gradient(90deg,#F8D08A,#E0782C)}
+.nav .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
+.mark{display:flex;align-items:baseline;gap:6px;text-decoration:none;color:var(--on-night);white-space:nowrap}
+.mark i{font-family:var(--display);font-style:italic;font-weight:300;font-size:24px}
+.mark b{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.3em;background:linear-gradient(90deg,#F8D08A,#E0782C);-webkit-background-clip:text;background-clip:text;color:transparent}
+.links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+.links::-webkit-scrollbar{display:none}
+.links a{color:#C9BFB2;text-decoration:none;font-size:14px;padding:6px 10px;border-radius:6px;white-space:nowrap;transition:color .3s,background .3s}
+.links a:hover,.links a:focus-visible,.links a.on{color:#F2E6D3;background:#2E2640}
+a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* hero: un’alba che sale con lo scroll */
+.hero{position:relative;overflow:hidden;background:#1F1A2E;color:var(--on-night);text-align:center;padding-block:clamp(120px,20vw,220px);isolation:isolate}
+.hero::before{content:"";position:absolute;inset:-10%;z-index:-2;background:radial-gradient(ellipse 70% 60% at 50% calc(125% - var(--h) * 70%), #F2A65A 0%, #C25A2A 22%, #5A2E3E 48%, #1F1A2E 78%);transform:scale(calc(1 + var(--h) * .15))}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.hero .wrap{align-items:center;transform:translate3d(0,calc(var(--h) * 120px),0) scale(calc(1 - var(--h) * .12));opacity:calc(1 - var(--h) * 1.1);filter:blur(calc(var(--h) * 8px))}
+.word{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:.22em;line-height:1}
+.word i{font-family:var(--display);font-style:italic;font-weight:300;font-size:clamp(64px,13vw,156px);color:#F6EADB;animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both}
+.word .luce{display:flex;letter-spacing:0}
+.word .luce span{font-family:var(--display);font-weight:600;font-size:clamp(56px,12vw,144px);margin-right:.2em;background:linear-gradient(90deg,#FBE0A8,#F2A65A,#E0782C,#C25A2A);background-size:400% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both}
+.word .luce span:nth-child(1){background-position:0% 0;animation-delay:.15s}
+.word .luce span:nth-child(2){background-position:33% 0;animation-delay:.25s}
+.word .luce span:nth-child(3){background-position:66% 0;animation-delay:.35s}
+.word .luce span:nth-child(4){background-position:100% 0;animation-delay:.45s;margin-right:0}
+@keyframes rise{from{opacity:.25;transform:translateY(.25em);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+.hero p{color:#E6D9CB;font-size:clamp(18px,2.2vw,22px);max-width:40ch;animation:rise 1.4s .6s cubic-bezier(.2,.7,.2,1) both}
+.hero .meta{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#BFB3BA}
+.scroll-cue{width:1px;height:56px;background:linear-gradient(#F2A65A,transparent);margin-top:16px;animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+/* nastro di valori che accelera con lo scroll */
+.ribbon{background:var(--accent);color:#1F1A2E;overflow:hidden;padding-block:14px;border-block:1px solid #C25A2A}
+.ribbon .track{display:flex;width:max-content;gap:0;will-change:transform}
+.ribbon span{font-family:var(--display);font-size:clamp(22px,3vw,30px);font-style:italic;white-space:nowrap;padding-inline:22px}
+.ribbon span::after{content:"✦";font-style:normal;font-size:.6em;margin-left:44px;vertical-align:middle}
+
+/* griglie */
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:8px;min-width:0;transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s,border-color .5s}
+@media (hover:hover){.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(31,26,46,.16);border-color:var(--gold)}}
+.card h3.big{font-family:var(--display);font-size:32px;font-weight:600;color:var(--accent-ink)}
+.rows{display:flex;flex-direction:column}
+.row{position:relative;display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:24px;padding-block:20px}
+.row::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,var(--accent),var(--line) 40%);transform-origin:left;transform:scaleX(var(--p))}
+.row strong{color:var(--ink);font-weight:600}
+@media (max-width:640px){.row{grid-template-columns:1fr;gap:4px}}
+
+/* bande scure con alone che segue il mouse */
+.band{background:var(--night);color:var(--night-text);overflow:hidden;--mx:50%;--my:50%}
+.band::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px circle at var(--mx) var(--my), rgba(242,166,90,.16), transparent 60%);opacity:0;transition:opacity .6s}
+.band:hover::before{opacity:1}
+.band h2,.band h3{color:var(--on-night)}
+.band .eyebrow{color:var(--gold)}
+.band .card{background:rgba(255,255,255,.02);border-color:var(--night-line)}
+.band .card h3{color:var(--gold)}
+.band p{color:var(--night-text)}
+
+/* parole che si accendono leggendo */
+.fill .w{transition:color .35s, opacity .35s;opacity:.28}
+.fill .w.on{opacity:1}
+
+/* Manifesto */
+.mani-title{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(90px,19vw,250px);line-height:.92;white-space:nowrap;background:linear-gradient(90deg,#F2A65A,#E0782C 35%,#9A4A3C 60%,#F2A65A 85%);background-size:220% 100%;background-position:calc(var(--p) * 100%) 0;-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em;transform:translate3d(calc((1 - var(--p)) * -18vw),0,0)}
+.rule{height:3px;width:160px;border:0;background:var(--accent);transform-origin:left;transform:scaleX(var(--p))}
+.funcs .num{font-family:var(--display);font-size:50px;line-height:1;color:var(--accent)}
+.stage{perspective:1400px;width:100%;display:flex;justify-content:center}
+.sheet{background:#F6EFE4;color:#2A2233;border-radius:6px;box-shadow:0 calc(10px + var(--p) * 30px) calc(30px + var(--p) * 60px) rgba(0,0,0,.5);padding:clamp(28px,5vw,64px);max-width:860px;width:100%;display:flex;flex-direction:column;gap:22px;transform:rotateX(calc((1 - var(--p)) * 26deg)) translate3d(0,calc((1 - var(--p)) * 80px),0) scale(calc(.9 + .1 * var(--p)));transform-origin:50% 100%}
+.sheet header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:14px;position:relative}
+.sheet header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#E0782C;transform-origin:left;transform:scaleX(var(--p))}
+.sheet header h3{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(36px,5vw,52px);color:#1F1A2E;line-height:1}
+.sheet header span{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#A84E18;font-weight:600}
+.sheet ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.sheet li{font-family:var(--display);font-size:clamp(20px,2.4vw,25px);line-height:1.35;color:#1F1A2E;display:grid;grid-template-columns:3.2em 1fr;gap:8px;transition:opacity .6s, transform .6s cubic-bezier(.2,.7,.2,1)}
+.sheet li em{font-style:normal;color:#E0782C}
+.sheet li.dim{opacity:.22;transform:translateX(-10px)}
+.sign{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-top:10px}
+.sign p{font-family:var(--display);font-style:italic;font-size:28px;color:#A84E18;clip-path:inset(0 calc((1 - var(--p)) * 100%) 0 0)}
+.sign .line{flex:1;min-width:140px;height:28px;position:relative}
+.sign .line::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:#8A7F78;transform-origin:left;transform:scaleX(var(--p))}
+.sign small{font-size:13px;color:#8A7F78}
+.note{font-size:14px;color:var(--muted)}
+.band .note{color:#A89DA6}
+
+/* prezzi, fasi, passi */
+.prices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.price{border:1px solid var(--night-line);border-radius:14px;padding:22px 24px;transform:translate3d(0,calc((1 - var(--p)) * var(--lift, 40px)),0)}
+.price strong{display:block;font-family:var(--display);font-size:56px;line-height:1;color:var(--on-night);font-variant-numeric:tabular-nums}
+.price span{color:#C9BFB2}
+.price.top{background:linear-gradient(135deg,#F2A65A,#E0782C);border-color:transparent}
+.price.top strong,.price.top span{color:#1F1A2E}
+.phases{display:grid;gap:20px;grid-template-columns:1fr auto 1fr;align-items:center}
+.arrow{width:80px;height:2px;background:var(--gold);position:relative;transform-origin:left;transform:scaleX(var(--p))}
+.arrow::after{content:"";position:absolute;right:-2px;top:-6px;border:7px solid transparent;border-left:10px solid var(--gold);border-right:0}
+@media (max-width:760px){.phases{grid-template-columns:1fr}.arrow{transform:rotate(90deg) scaleX(var(--p));margin:16px auto}}
+.k{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+.band .k{color:var(--gold)}
+.steps{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.step{position:relative;padding-top:20px;display:flex;flex-direction:column;gap:8px}
+.step::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:2px;background:#433A52}
+.step::after{content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:2px;background:linear-gradient(90deg,#F2A65A,#E0782C);transform-origin:left;transform:scaleX(var(--p))}
+.split{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));align-items:start}
+.quote{background:var(--night);color:#C9BFB2;border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.quote h3{color:var(--gold)}
+.checks{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.checks ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.big-line{font-family:var(--display);font-size:clamp(26px,3.4vw,38px);line-height:1.25;color:var(--ink);max-width:28ch}
+.band .big-line{color:var(--on-night)}
+footer{background:var(--night);color:#9A8F97;padding-block:56px;text-align:center}
+footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
+
+/* ---------- titoli che si ricompongono lettera per lettera ---------- */
+section > .wrap{z-index:1}
+.split .wd{display:inline-block;white-space:nowrap}
+.split .ch{display:inline-block;transform:translate3d(calc((1 - var(--p)) * var(--dx)),calc((1 - var(--p)) * var(--dy)),0) rotate(calc((1 - var(--p)) * var(--r))) scale(calc(1 + (1 - var(--p)) * var(--s)));opacity:calc(.08 + .92 * var(--p));filter:blur(calc((1 - var(--p)) * 5px))}
+
+/* forme che fluttuano in parallasse */
+.deco{position:absolute;pointer-events:none;z-index:0;will-change:transform}
+
+/* ---------- interludi: pura estetica ---------- */
+.inter{position:relative;background:#120E1A;color:#F2E6D3}
+.inter .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center}
+
+#shatter{height:300vh;--q:0;--e:0}
+#shatter .stage{background:radial-gradient(ellipse at 50% 50%, hsl(calc(18 + var(--q) * 30) 55% calc(14% + var(--e) * 10%)) 0%, #120E1A 70%)}
+.shards{display:flex;gap:.04em;font-family:var(--display);font-weight:600;font-size:clamp(110px,24vw,340px);line-height:1;position:relative}
+.letter{position:relative;display:inline-block}
+.letter .base{visibility:hidden}
+.sl{position:absolute;inset:0;background:linear-gradient(180deg,#FBE0A8,#F2A65A 45%,#E0782C 75%,#C25A2A);-webkit-background-clip:text;background-clip:text;color:transparent;transform:translate3d(calc(var(--e) * var(--dx)),calc(var(--e) * var(--dy)),0) rotate(calc(var(--e) * var(--r))) scale(calc(1 + var(--e) * var(--s)));will-change:transform}
+.bit{position:absolute;left:50%;top:50%;width:var(--sz);height:var(--sz);background:var(--c);border-radius:var(--br);transform:translate3d(calc(var(--e) * var(--dx)),calc(var(--e) * var(--dy)),0) rotate(calc(var(--e) * var(--r))) scale(var(--e));opacity:var(--e);box-shadow:0 0 18px var(--c)}
+.cap{position:absolute;bottom:12vh;left:0;right:0;text-align:center;font-family:var(--display);font-style:italic;font-size:clamp(20px,2.4vw,28px);color:#E6D9CB;opacity:calc(1 - var(--e) * 1.6);letter-spacing:.06em;margin:0 auto}
+
+#glare{height:260vh;--q:0;--f:0;--t:0}
+#glare .stage{background:#0E0B14}
+.g-rays{position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg, rgba(242,166,90,0) 0deg 6deg, rgba(242,166,90,.14) 6deg 8deg);transform:rotate(calc(var(--q) * 240deg)) scale(calc(.5 + var(--q) * 1.2));opacity:calc(.15 + var(--q) * .85);-webkit-mask-image:radial-gradient(circle,#000 0%,transparent 55%);mask-image:radial-gradient(circle,#000 0%,transparent 55%)}
+.g-sun{position:absolute;width:30vmin;height:30vmin;border-radius:50%;background:radial-gradient(circle,#FFF6E0 0%,#FBE0A8 25%,#F2A65A 50%,rgba(224,120,44,0) 72%);transform:scale(calc(.3 + var(--q) * var(--q) * 8))}
+.g-ghost{position:absolute;border-radius:50%;left:50%;top:50%;width:var(--w);height:var(--w);margin:calc(var(--w) / -2) 0 0 calc(var(--w) / -2);background:radial-gradient(circle, var(--c), transparent 70%);border:1px solid rgba(255,230,190,.22);transform:translate3d(calc((var(--q) - .45) * var(--k) * 70vw),calc((var(--q) - .45) * var(--k) * -45vh),0);mix-blend-mode:screen;opacity:calc(1 - var(--f))}
+.g-flash{position:absolute;inset:0;background:radial-gradient(circle,#FFFBF2 0%,#FBE0A8 45%,rgba(242,166,90,.5) 90%);opacity:var(--f);pointer-events:none}
+.g-text{position:relative;margin:0;max-width:none;font-family:var(--display);font-style:italic;font-size:clamp(44px,8vw,116px);color:color-mix(in srgb, #1F1A2E calc(var(--f) * 100%), #F6EADB);letter-spacing:calc(var(--t) * .12em - .06em);opacity:var(--t);transform:scale(calc(.8 + var(--t) * .2));text-align:center;filter:blur(calc((1 - var(--t)) * 10px))}
+
+#orbits{height:300vh;--q:0}
+#orbits .stage{background:radial-gradient(ellipse at 50% 55%, #2A1E2E 0%, #120E1A 70%)}
+#orbits canvas{position:absolute;inset:0;width:100%;height:100%}
+.o-text{position:relative;margin:0;max-width:none;font-family:var(--display);font-size:clamp(40px,7vw,100px);font-style:italic;opacity:clamp(0, calc((var(--q) - .6) * 3.5), 1);transform:translateY(calc((1 - var(--q)) * 60px));text-align:center;color:#F6EADB;text-shadow:0 0 40px rgba(242,166,90,.5)}
+
+@media (prefers-reduced-motion: reduce){
+  .inter{height:auto!important}
+  .inter .stage{position:relative}
+  #glare{--q:.35;--t:1}
+  #orbits{--q:1}
+  .split .ch{transform:none;opacity:1;filter:none}
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-sc]{--p:1!important}
+  .hero .wrap{transform:none;opacity:1;filter:none}
+  .fill .w{opacity:1}
+  .sheet li.dim{opacity:1;transform:none}
+}
+</style>
+
+<nav class="nav" aria-label="Sezioni">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Casa Luce, inizio pagina"><i>casa</i><b>LUCE</b></a>
+    <div class="links">
+      <a href="#visione">Visione</a>
+      <a href="#luogo">Il luogo</a>
+      <a href="#manifesto">Manifesto</a>
+      <a href="#comunita">Comunità</a>
+      <a href="#modello">Modello</a>
+      <a href="#ecosistema">Ecosistema</a>
+      <a href="#percorso">Percorso</a>
+      <a href="#prossimi">Prossimi passi</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="sparks" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="word" role="img" aria-label="Casa Luce"><i>casa</i><span class="luce"><span>L</span><span>U</span><span>C</span><span>E</span></span></div>
+    <p>Hotel, members club e movimento culturale: un luogo dove si entra condividendo una visione.</p>
+    <p class="meta">Roma · Progetto in sviluppo · Ottobre 2026</p>
+    <div class="scroll-cue" aria-hidden="true"></div>
+  </div>
+</header>
+
+<div class="ribbon" aria-hidden="true"><div class="track" id="track"></div></div>
+
+<section id="visione">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>La visione</p>
+    <h2 data-sc data-split>Un luogo, una comunità, un movimento</h2>
+    <p class="big-line fill" data-fill>Un members club che non seleziona per reddito o per fama, ma per affinità di pensiero. Il primo Casa Luce apre entro settembre 2027.</p>
+    <div class="grid">
+      <div class="card rv" data-sc data-d="0"><h3 class="big">Il luogo</h3><p>Una catena di hotel polifunzionali. Si dorme, si mangia, ci si allena, si fa festa: ogni struttura è un motore che attira persone e le fa incontrare.</p></div>
+      <div class="card rv" data-sc data-d="1"><h3 class="big">La comunità</h3><p>Un members club in cui si entra condividendo una visione. Chi arriva non compra solo un servizio: dichiara di pensarla allo stesso modo.</p></div>
+      <div class="card rv" data-sc data-d="2"><h3 class="big">Il movimento</h3><p>Un sistema di valori scritto nel Manifesto, internazionale e multiculturale, che con il tempo diventa un vero ambiente di vita.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="inter" id="shatter" aria-hidden="true">
+  <div class="stage">
+    <div class="shards" id="shards"></div>
+    <p class="cap">la luce si scompone, e torna intera</p>
+  </div>
+</div>
+
+<section id="luogo" class="band">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>Il luogo</p>
+    <h2 data-sc data-split>Un hotel dove succedono più cose</h2>
+    <p class="lead rv" data-sc>Un posto vivo e festoso, non un ritiro. L’alcol c’è, la musica pure: il benessere non diventa moralismo, e ognuno vive il luogo a modo suo.</p>
+    <div class="grid">
+      <div class="card rv" data-sc data-d="0"><h3>Area house</h3><p>Il salotto della comunità: si lavora, si chiacchiera, si conoscono persone.</p></div>
+      <div class="card rv" data-sc data-d="1"><h3>Feste ed eventi</h3><p>Musica, ballo, serate. Più movimentato di Soho House.</p></div>
+      <div class="card rv" data-sc data-d="2"><h3>Palestra wellness</h3><p>Più cura del corpo che attrezzi: allenarsi per stare bene e vivere a lungo.</p></div>
+      <div class="card rv" data-sc data-d="0"><h3>Piscina</h3><p>In ogni struttura: relax di giorno, incontro la sera.</p></div>
+      <div class="card rv" data-sc data-d="1"><h3>Ristorante</h3><p>La cucina che oggi manca: healthy ma saporita, su più fasce di prezzo.</p></div>
+      <div class="card rv" data-sc data-d="2"><h3>Camere</h3><p>Dalla stanza budget alla camera 5 stelle con servizio dedicato, sotto lo stesso tetto.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="manifesto">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>Il cuore di Casa Luce</p>
+    <div class="mani-title" data-sc data-range="1.1,0.35">Manifesto</div>
+    <hr class="rule" data-sc>
+    <p class="big-line fill" data-fill>Prima del luogo, prima dei servizi, c’è un testo. Chi lo legge e si riconosce, lo firma ed entra a far parte di Casa Luce.</p>
+    <div class="grid funcs">
+      <div class="card rv" data-sc data-d="0"><span class="num">01</span><h3>Identità</h3><p>Racconta con precisione chi è Casa Luce e chi la frequenta: una visione della vita, non solo del benessere.</p></div>
+      <div class="card rv" data-sc data-d="1"><span class="num">02</span><h3>Attrazione</h3><p>È il Manifesto ad attirare le persone, prima ancora dei servizi: il marketing è il pensiero stesso.</p></div>
+      <div class="card rv" data-sc data-d="2"><span class="num">03</span><h3>Adesione</h3><p>Chi entra lo sottoscrive, come una firma: membri e collaboratori ne rispettano le regole.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-label="Il testo del Manifesto">
+  <div class="wrap" style="align-items:center">
+    <div class="stage">
+      <article class="sheet" data-sc data-range="1,0.45" id="sheet">
+        <header><h3>Manifesto</h3><span>Casa Luce</span></header>
+        <ol id="principles">
+          <li><em>I.</em><span>Il corpo è un tempio: ci prendiamo cura del nostro benessere, fisico e mentale.</span></li>
+          <li><em>II.</em><span>La nostra spiritualità nasce dalla nostra natura, non da una religione.</span></li>
+          <li><em>III.</em><span>Siamo gentili, generosi e aperti verso chi incontriamo.</span></li>
+          <li><em>IV.</em><span>Un mondo unico: culture diverse, un solo pensiero.</span></li>
+          <li><em>V.</em><span>Scegliamo la pace, contro le guerre e contro ciò che divide.</span></li>
+          <li><em>VI.</em><span>Siamo liberi di essere noi stessi, nel rispetto degli altri.</span></li>
+          <li><em>VII.</em><span>Crediamo in un capitalismo sano, che crea valore senza distruggere.</span></li>
+        </ol>
+        <div class="sign" data-sc data-range="0.95,0.6"><p>Io la penso così.</p><div class="line" aria-hidden="true"></div><small>Firma</small></div>
+      </article>
+    </div>
+    <p class="note rv" data-sc style="text-align:center">Prima bozza dei principi, ricavata dai valori emersi nelle riunioni: da scrivere insieme.</p>
+  </div>
+</section>
+
+<div class="inter" id="glare" aria-hidden="true">
+  <div class="stage">
+    <div class="g-rays"></div>
+    <div class="g-sun"></div>
+    <div id="ghosts"></div>
+    <div class="g-flash"></div>
+    <p class="g-text">Io la penso così.</p>
+  </div>
+</div>
+
+<section id="comunita">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>La comunità</p>
+    <h2 data-sc data-split>Si entra aderendo al Manifesto, non per reddito</h2>
+    <div class="split">
+      <div class="rows">
+        <div class="row rv-x" data-sc data-d="0"><strong>Chi la frequenta</strong><p>Persone che curano il benessere e la longevità, con una spiritualità propria e non religiosa, una visione ampia della vita e un’apertura verso ogni provenienza. Il pubblico di Burning Man e dei grandi festival ne è un buon ritratto.</p></div>
+        <div class="row rv-x" data-sc data-d="1"><strong>Come si entra</strong><p>I members club oggi selezionano con criteri flessibili e poco definiti. In Casa Luce il filtro è il Manifesto: chi entra lo sottoscrive e sono le persone a scegliere il posto.</p></div>
+        <div class="row rv-x" data-sc data-d="2"><strong>Chi ci lavora</strong><p>Anche i collaboratori aderiscono al Manifesto. Sono persone del posto o integrate, e parlano la lingua del paese in cui lavorano.</p></div>
+        <div class="row rv-x" data-sc data-d="3"><strong>Come se ne parla</strong><p>Casa Luce è un movimento culturale, un sistema di valori. Le parole “religione” e “laico” non si usano.</p></div>
+      </div>
+      <div class="quote rv" data-sc data-d="2">
+        <h3>La domanda aperta</h3>
+        <p>“La gente va dove pensa di divertirsi di più. Due amici con idee diverse escono comunque insieme.” — Afsoun</p>
+        <p class="note">Da progettare: come si aderisce, chi valuta, tipi di membership e quote. I criteri sui collaboratori vanno verificati con un legale.</p>
+      </div>
+    </div>
+    <p class="big-line fill" data-fill>Coerenza totale: personale, ospiti, servizi, prodotti, comunicazione e prezzi seguono tutti il Manifesto. Non una virgola fuori posto.</p>
+  </div>
+</section>
+
+<section id="modello" class="band">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>Prezzi e modello di business</p>
+    <h2 data-sc data-split>Lo stesso prodotto su più fasce, perché tutti possano esserci</h2>
+    <div class="prices">
+      <div class="price" data-sc style="--lift:30px"><strong>€8</strong><span>Gin tonic con Beefeater</span></div>
+      <div class="price" data-sc style="--lift:70px"><strong>€15</strong><span>Gin tonic con Tanqueray Ten</span></div>
+      <div class="price top" data-sc style="--lift:110px"><strong>€25</strong><span>Gin tonic con gin artigianale</span></div>
+    </div>
+    <p class="rv" data-sc>Stesso principio per camere (budget, 3 stelle, 5 stelle), cucina e affitti lunghi. Prezzi legati al costo del prodotto e differenze marcate tra le fasce. I prezzi del bar sono esempi indicativi.</p>
+    <h2 data-sc data-split style="margin-top:40px">Prima si valida il format, poi si cresce in gestione</h2>
+    <div class="phases">
+      <div class="card rv" data-sc data-d="0"><span class="k">Fase 1 · Il prototipo</span><h3>Il primo Casa Luce</h3><p>Lo finanziano privati che credono nel progetto a lungo termine, come in un super pre-seed. I soldi servono soprattutto a farlo conoscere.</p></div>
+      <div class="arrow" data-sc data-range="0.85,0.5" aria-hidden="true"></div>
+      <div class="card rv" data-sc data-d="2"><span class="k">Fase 2 · L’espansione</span><h3>Gestione per conto di fondi</h3><p>I fondi comprano e ristrutturano gli immobili, Casa Luce porta brand, format e gestione, come fanno Marriott e Hilton. L’investimento proprio tende a zero.</p></div>
+    </div>
+    <p class="note rv" data-sc>Capitale necessario per il primo hotel: da quantificare. Base di partenza: il lavoro su The Place e il settore immobiliare e hospitality.</p>
+  </div>
+</section>
+
+<section id="ecosistema">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>L’ecosistema · visione di lungo periodo</p>
+    <h2 data-sc data-split>Dall’albergo a un ambiente di vita</h2>
+    <div class="rows">
+      <div class="row rv-x" data-sc><strong>Più case per città</strong><p>Hotel, case vacanze ed extra-alberghiero, accessibili solo a chi fa parte della comunità.</p></div>
+      <div class="row rv-x" data-sc><strong>Abitare</strong><p>Case in affitto anche per anni, in tre categorie. Anche un romano può vivere in una Casa Luce.</p></div>
+      <div class="row rv-x" data-sc><strong>Reward</strong><p>Ogni spesa dentro Casa Luce genera benefit, come i programmi fedeltà, ma estesi al vivere.</p></div>
+      <div class="row rv-x" data-sc><strong>Una società di tutti</strong><p>Gli iscritti sono anche stakeholder e gli utili si dividono in modo equo.</p></div>
+      <div class="row rv-x" data-sc><strong>Moneta e strumenti</strong><p>Una criptovaluta con wallet per ogni membro, un sistema operativo per la vita quotidiana, drive protetti.</p></div>
+      <div class="row rv-x" data-sc><strong>Costruire</strong><p>Aziende storiche gestite secondo il Manifesto, immobili, scuole, università e ospedali a marchio Casa Luce.</p></div>
+    </div>
+    <p class="big-line fill" data-fill>“Uno Stato negli Stati”, ma un facilitatore, non un competitor: un futuro equo, che protegge la privacy delle persone.</p>
+  </div>
+</section>
+
+<div class="inter" id="orbits" aria-hidden="true">
+  <div class="stage">
+    <canvas id="orbit-cv"></canvas>
+    <p class="o-text">Un mondo unico.</p>
+  </div>
+</div>
+
+<section id="percorso" class="band">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>Il percorso</p>
+    <h2 data-sc data-split>Prima la comunità, poi il luogo</h2>
+    <div class="steps">
+      <div class="step" data-sc data-range="0.95,0.55"><span class="k">Scrivere</span><p>Il Manifesto, subito: i pensieri che riteniamo giusti, quelli della nostra cerchia.</p></div>
+      <div class="step" data-sc data-range="0.9,0.5"><span class="k">Divulgare</span><p>Contenuti costanti su Instagram: una pagina principale in inglese e una per ogni paese.</p></div>
+      <div class="step" data-sc data-range="0.85,0.45"><span class="k">Creare fiducia</span><p>Chi ascolta ogni giorno riconosce ciò che condivide e diventa seguito.</p></div>
+      <div class="step" data-sc data-range="0.8,0.4"><span class="k">Aprire</span><p>Da quella comunità nasce il primo Casa Luce, entro settembre 2027.</p></div>
+    </div>
+    <p class="note rv" data-sc>Nessuna esposizione personale: personaggi creati con l’AI o una pagina senza volto. L’inglese è la lingua ufficiale.</p>
+  </div>
+</section>
+
+<section id="prossimi">
+  <div class="wrap">
+    <p class="eyebrow rv" data-sc>Prossimi passi</p>
+    <h2 data-sc data-split>Si parte dal Manifesto: tutto il resto dipende da lui</h2>
+    <div class="checks">
+      <div class="card rv" data-sc data-d="0"><h3>Manifesto e voce</h3><ul><li>Scrivere la prima bozza</li><li>Aprire le pagine Instagram</li><li>Decidere: per nazione o per lingua</li></ul></div>
+      <div class="card rv" data-sc data-d="1"><h3>Prodotto e comunità</h3><ul><li>Spazi e dimensioni</li><li>Regole di adesione</li><li>Nomi e prezzi delle fasce</li></ul></div>
+      <div class="card rv" data-sc data-d="2"><h3>Organizzazione</h3><ul><li>Struttura aziendale</li><li>Capitale e finanziatori</li><li>Location e verifiche legali</li></ul></div>
+    </div>
+    <div class="chips rv" data-sc aria-label="Riferimenti">
+      <span class="chip">Soho House</span><span class="chip">Movimento hippy</span><span class="chip">Burning Man</span><span class="chip">Marriott · Hilton</span><span class="chip">The Place</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Torna su"><i>casa</i><b>LUCE</b></a>
+    <p class="note" style="color:#A89DA6">Bozza di lavoro · nomi, numeri e meccanismi da definire insieme · Roma, 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  var clamp = function(v,a,b){return v<a?a:v>b?b:v};
+
+  /* nastro di valori */
+  var words = ['Benessere','Pace','Libertà','Un mondo unico','Gentilezza','Spiritualità','Apertura','Purezza','Amore'];
+  var track = document.getElementById('track');
+  var html = ''; for (var k=0;k<4;k++) words.forEach(function(w){ html += '<span>'+w+'</span>'; });
+  track.innerHTML = html;
+
+  /* testo che si accende parola per parola */
+  var fills = [].slice.call(document.querySelectorAll('[data-fill]'));
+  fills.forEach(function(el){
+    var t = el.textContent.trim().split(/\s+/);
+    el.innerHTML = t.map(function(w){ return '<span class="w">'+w+'</span>'; }).join(' ');
+  });
+
+  var sc = [].slice.call(document.querySelectorAll('[data-sc]'));
+  var items = sc.map(function(el){
+    var r = (el.getAttribute('data-range')||'1,0.62').split(',').map(Number);
+    var d = +(el.getAttribute('data-d')||0);
+    return {el:el, a:r[0]+d*0.05, b:r[1]+d*0.05, last:-1};
+  });
+  var fillItems = fills.map(function(el){ return {el:el, w:[].slice.call(el.querySelectorAll('.w')), n:-1}; });
+  var lis = [].slice.call(document.querySelectorAll('#principles li'));
+  var sheet = document.getElementById('sheet');
+  var hero = document.querySelector('.hero');
+  var links = [].slice.call(document.querySelectorAll('.links a'));
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+
+  if (reduce) { fillItems.forEach(function(f){ f.w.forEach(function(w){ w.classList.add('on'); }); }); }
+
+  var offset = 0, lastY = window.scrollY, vel = 0, trackW = 0;
+  function measure(){ trackW = track.scrollWidth / 4; }
+  measure(); window.addEventListener('resize', measure);
+
+  function frame(){
+    var vh = window.innerHeight, y = window.scrollY;
+    var docH = document.documentElement.scrollHeight - vh;
+    root.style.setProperty('--sp', clamp(y/Math.max(docH,1),0,1).toFixed(4));
+
+    if (!reduce){
+      var hh = hero.offsetHeight;
+      root.style.setProperty('--h', clamp(y/hh,0,1).toFixed(4));
+
+      items.forEach(function(it){
+        var r = it.el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) { if (it.last !== (r.top>vh?0:1)) { it.last = r.top>vh?0:1; it.el.style.setProperty('--p', it.last); } return; }
+        var p = clamp((vh*it.a - r.top)/(vh*(it.a-it.b)),0,1);
+        p = 1 - Math.pow(1-p, 2.2);
+        if (Math.abs(p-it.last) > .002){ it.last = p; it.el.style.setProperty('--p', p.toFixed(3)); }
+      });
+
+      fillItems.forEach(function(f){
+        var r = f.el.getBoundingClientRect();
+        var p = clamp((vh*0.9 - r.top)/(vh*0.5),0,1);
+        var n = Math.round(p * f.w.length);
+        if (n !== f.n){ f.n = n; f.w.forEach(function(w,i){ w.classList.toggle('on', i < n); }); }
+      });
+
+      var rs = sheet.getBoundingClientRect();
+      var ps = clamp((vh*0.75 - rs.top)/(rs.height*0.75),0,1);
+      var lit = Math.ceil(ps * lis.length + 0.01);
+      lis.forEach(function(li,i){ li.classList.toggle('dim', i >= lit); });
+
+      vel += ((y - lastY) - vel) * 0.2;
+      offset += 0.6 + Math.abs(vel) * 0.35;
+      if (trackW) offset = offset % trackW;
+      track.style.transform = 'translate3d(' + (-offset).toFixed(1) + 'px,0,0) skewX(' + clamp(-vel*0.25,-10,10).toFixed(2) + 'deg)';
+    }
+    lastY = y;
+
+    var cur = -1;
+    secs.forEach(function(s,i){ if (s && s.getBoundingClientRect().top < vh*0.45) cur = i; });
+    links.forEach(function(a,i){ var on = i===cur; if (a.classList.contains('on') !== on){ a.classList.toggle('on', on); if (on && a.scrollIntoView) a.parentNode.scrollTo({left:a.offsetLeft - 40, behavior:'smooth'}); } });
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* alone che segue il mouse sulle bande scure */
+  if (window.matchMedia && matchMedia('(pointer:fine)').matches){
+    [].slice.call(document.querySelectorAll('.band')).forEach(function(b){
+      b.addEventListener('pointermove', function(e){
+        var r = b.getBoundingClientRect();
+        b.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        b.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
+  /* scintille di luce che salgono nell’hero */
+  var cv = document.getElementById('sparks'), cx = cv.getContext && cv.getContext('2d');
+  if (cx){
+    var W, H, dpr = Math.min(window.devicePixelRatio||1, 2), parts = [];
+    function size(){ W = cv.clientWidth; H = cv.clientHeight; cv.width = W*dpr; cv.height = H*dpr; cx.setTransform(dpr,0,0,dpr,0,0); }
+    size(); window.addEventListener('resize', size);
+    var seed = 7; function rnd(){ seed = (seed*16807) % 2147483647; return seed/2147483647; }
+    for (var i=0;i<70;i++) parts.push({x:rnd(), y:rnd(), r:0.6+rnd()*2.4, s:0.15+rnd()*0.5, a:0.2+rnd()*0.6, ph:rnd()*6.28});
+    var t0 = performance.now();
+    function draw(t){
+      var dt = reduce ? 0 : (t - t0)/1000;
+      cx.clearRect(0,0,W,H);
+      var sy = window.scrollY;
+      parts.forEach(function(p){
+        var y = ((p.y*H - dt*p.s*40 - sy*p.s*0.6) % H + H) % H;
+        var x = p.x*W + Math.sin(dt*0.6 + p.ph)*14;
+        var al = p.a * (0.55 + 0.45*Math.sin(dt*1.3 + p.ph));
+        var g = cx.createRadialGradient(x,y,0,x,y,p.r*5);
+        g.addColorStop(0,'rgba(255,214,150,'+al+')'); g.addColorStop(1,'rgba(255,170,90,0)');
+        cx.fillStyle = g; cx.beginPath(); cx.arc(x,y,p.r*5,0,6.283); cx.fill();
+      });
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+
+  /* ================= effetti extra ================= */
+  var s2 = 11; function R(){ s2 = (s2*48271) % 2147483647; return s2/2147483647; }
+  function rr(a,b){ return a + R()*(b-a); }
+
+  /* titoli: ogni lettera parte da un punto diverso e si ricompone */
+  [].slice.call(document.querySelectorAll('[data-split]')).forEach(function(h){
+    h.classList.add('split');
+    var words = h.textContent.trim().split(/\s+/);
+    h.setAttribute('aria-label', h.textContent.trim());
+    h.innerHTML = words.map(function(w){
+      return '<span class="wd" aria-hidden="true">' + w.split('').map(function(c){
+        return '<span class="ch" style="--dx:'+rr(-140,140).toFixed(0)+'px;--dy:'+rr(-90,90).toFixed(0)+'px;--r:'+rr(-110,110).toFixed(0)+'deg;--s:'+rr(-.4,1.2).toFixed(2)+'">'+c+'</span>';
+      }).join('') + '</span>';
+    }).join(' ');
+  });
+
+  /* forme decorative in parallasse nelle sezioni chiare */
+  var shapeSvg = [
+    '<svg width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="none" stroke="#E0782C" stroke-width="1.5" opacity=".45"/></svg>',
+    '<svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="#F2A65A" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" opacity=".7"/></svg>',
+    '<svg width="140" height="70" viewBox="0 0 140 70"><path d="M0 70 A70 70 0 0 1 140 70 Z" fill="#F2A65A" opacity=".22"/></svg>',
+    '<svg width="120" height="120" viewBox="0 0 120 120"><path d="M60 8 L112 104 L8 104 Z" fill="none" stroke="#C25A2A" stroke-width="1.5" opacity=".4"/></svg>',
+    '<svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="40" fill="#E0782C" opacity=".12"/></svg>'
+  ];
+  var decos = [];
+  [].slice.call(document.querySelectorAll('section[id]:not(.band)')).forEach(function(sec){
+    for (var i=0;i<3;i++){
+      var d = document.createElement('div'); d.className = 'deco'; d.setAttribute('aria-hidden','true');
+      d.innerHTML = shapeSvg[Math.floor(R()*shapeSvg.length)];
+      d.style.left = (R()<.5 ? rr(-4,18) : rr(72,94)) + '%';
+      d.style.top = rr(5,85) + '%';
+      sec.insertBefore(d, sec.firstChild);
+      decos.push({el:d, sec:sec, k:rr(-.35,.35), rot:rr(-.25,.25), ph:rr(0,6.28)});
+    }
+  });
+
+  /* interludio 1: LUCE che si frantuma */
+  var shards = document.getElementById('shards');
+  var palette = ['#FBE0A8','#F2A65A','#E0782C','#C25A2A','#F6EADB'];
+  'LUCE'.split('').forEach(function(ch){
+    var L = document.createElement('span'); L.className = 'letter';
+    var inner = '<span class="base">'+ch+'</span>';
+    var n = 6;
+    for (var i=0;i<n;i++){
+      var top = (i*100/n).toFixed(1), bot = (100 - (i+1)*100/n).toFixed(1);
+      inner += '<span class="sl" style="clip-path:inset('+top+'% -10% '+bot+'% -10%);--dx:'+rr(-38,38).toFixed(1)+'vw;--dy:'+rr(-38,38).toFixed(1)+'vh;--r:'+rr(-160,160).toFixed(0)+'deg;--s:'+rr(-.3,.8).toFixed(2)+'">'+ch+'</span>';
+    }
+    L.innerHTML = inner; shards.appendChild(L);
+  });
+  for (var b=0;b<46;b++){
+    var bit = document.createElement('span'); bit.className = 'bit';
+    var sz = rr(5,26);
+    bit.style.cssText = '--sz:'+sz.toFixed(0)+'px;--c:'+palette[b%5]+';--br:'+(R()<.4?'50%':(R()<.5?'2px':'0'))+';--dx:'+rr(-55,55).toFixed(1)+'vw;--dy:'+rr(-48,48).toFixed(1)+'vh;--r:'+rr(-400,400).toFixed(0)+'deg';
+    shards.appendChild(bit);
+  }
+
+  /* interludio 2: riflessi della lente */
+  var ghosts = document.getElementById('ghosts');
+  [[180,'rgba(242,166,90,.35)',1.2],[60,'rgba(251,224,168,.6)',.6],[110,'rgba(224,120,44,.25)',-.4],[34,'rgba(255,240,210,.7)',-.9],[240,'rgba(194,90,42,.18)',-1.6],[80,'rgba(242,166,90,.3)',2.1]].forEach(function(g){
+    var d = document.createElement('span'); d.className = 'g-ghost';
+    d.style.cssText = '--w:'+g[0]+'px;--c:'+g[1]+';--k:'+g[2];
+    ghosts.appendChild(d);
+  });
+
+  /* interludio 3: orbite di forme che dal caos diventano un sole */
+  var oc = document.getElementById('orbit-cv'), ox = oc.getContext && oc.getContext('2d'), OW=0, OH=0;
+  var odpr = Math.min(window.devicePixelRatio||1, 2);
+  function osize(){ OW = oc.clientWidth; OH = oc.clientHeight; oc.width = OW*odpr; oc.height = OH*odpr; if(ox) ox.setTransform(odpr,0,0,odpr,0,0); }
+  osize(); window.addEventListener('resize', osize);
+  var shapes = [], kinds = ['ring','dot','tri','arc','bar','sq'], rings = [9,15,22,30];
+  rings.forEach(function(cnt, ri){
+    for (var j=0;j<cnt;j++) shapes.push({ring:ri, idx:j, cnt:cnt, kind:kinds[Math.floor(R()*kinds.length)],
+      cx:rr(-.7,.7), cy:rr(-.6,.6), sp:rr(.2,.9), ph:rr(0,6.28), amp:rr(.04,.14), sz:rr(4,13), rot:rr(0,6.28), vr:rr(-1.5,1.5), col:palette[Math.floor(R()*5)]});
+  });
+  function easeOutBack(x){ var c1=1.4, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+  function drawOrbits(t, q){
+    if (!ox) return;
+    ox.clearRect(0,0,OW,OH);
+    var m = easeOutBack(clamp((q-.12)/.62,0,1)), M = Math.min(OW,OH), cxp = OW/2, cyp = OH/2;
+    var glow = ox.createRadialGradient(cxp,cyp,0,cxp,cyp,M*.16*(.2+m));
+    glow.addColorStop(0,'rgba(255,236,200,'+(.9*m).toFixed(3)+')'); glow.addColorStop(.4,'rgba(242,166,90,'+(.45*m).toFixed(3)+')'); glow.addColorStop(1,'rgba(224,120,44,0)');
+    ox.fillStyle = glow; ox.beginPath(); ox.arc(cxp,cyp,M*.16*(.2+m),0,6.283); ox.fill();
+    shapes.forEach(function(s){
+      var chx = s.cx + Math.sin(t*s.sp + s.ph)*s.amp + Math.cos(t*s.sp*.7 + s.ph*2)*s.amp*.6;
+      var chy = s.cy + Math.cos(t*s.sp*1.3 + s.ph)*s.amp;
+      var ang = s.idx/s.cnt*6.283 + t*.12*(s.ring%2?1:-1) + q*1.5*(s.ring%2?-1:1);
+      var rad = .17 + s.ring*.085;
+      var tx = Math.cos(ang)*rad, ty = Math.sin(ang)*rad;
+      var x = cxp + (chx + (tx-chx)*m) * M, y = cyp + (chy + (ty-chy)*m) * M;
+      var rot = s.rot + t*s.vr*(1-m*.7) + ang*m;
+      ox.save(); ox.translate(x,y); ox.rotate(rot);
+      ox.strokeStyle = s.col; ox.fillStyle = s.col; ox.lineWidth = 1.6; ox.globalAlpha = .55 + .45*m;
+      var z = s.sz;
+      if (s.kind==='ring'){ ox.beginPath(); ox.arc(0,0,z,0,6.283); ox.stroke(); }
+      else if (s.kind==='dot'){ ox.beginPath(); ox.arc(0,0,z*.45,0,6.283); ox.fill(); }
+      else if (s.kind==='tri'){ ox.beginPath(); ox.moveTo(0,-z); ox.lineTo(z*.87,z*.5); ox.lineTo(-z*.87,z*.5); ox.closePath(); ox.stroke(); }
+      else if (s.kind==='arc'){ ox.beginPath(); ox.arc(0,0,z,0,3.1416); ox.stroke(); }
+      else if (s.kind==='bar'){ ox.fillRect(-z,-1,z*2,2); }
+      else { ox.strokeRect(-z*.6,-z*.6,z*1.2,z*1.2); }
+      ox.restore();
+    });
+    ox.globalAlpha = 1;
+  }
+
+  var shatterEl = document.getElementById('shatter'), glareEl = document.getElementById('glare'), orbitsEl = document.getElementById('orbits');
+  function qOf(el){ var r = el.getBoundingClientRect(), vh = window.innerHeight; return clamp(-r.top/Math.max(r.height - vh,1),0,1); }
+  function visible(el){ var r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; }
+
+  if (reduce){ drawOrbits(0,1); }
+  else {
+    var tStart = performance.now();
+    (function fx(now){
+      var t = (now - tStart)/1000, vh = window.innerHeight;
+      if (visible(shatterEl)){
+        var q1 = qOf(shatterEl), x = clamp((q1-.12)/.76,0,1);
+        var e = Math.pow(Math.sin(x*Math.PI),1.25);
+        shatterEl.style.setProperty('--q', q1.toFixed(3));
+        shatterEl.style.setProperty('--e', e.toFixed(3));
+      }
+      if (visible(glareEl)){
+        var q2 = qOf(glareEl);
+        var f = Math.exp(-Math.pow((q2-.6)/.09,2));
+        var tt = clamp((q2-.5)/.16,0,1);
+        glareEl.style.setProperty('--q', q2.toFixed(3));
+        glareEl.style.setProperty('--f', f.toFixed(3));
+        glareEl.style.setProperty('--t', tt.toFixed(3));
+      }
+      if (visible(orbitsEl)){
+        var q3 = qOf(orbitsEl);
+        orbitsEl.style.setProperty('--q', q3.toFixed(3));
+        drawOrbits(t, q3);
+      }
+      decos.forEach(function(d){
+        var r = d.sec.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        var off = (r.top + r.height/2 - vh/2);
+        d.el.style.transform = 'translate3d(' + (Math.sin(t*.4 + d.ph)*12).toFixed(1) + 'px,' + (off*d.k).toFixed(1) + 'px,0) rotate(' + (off*d.rot + t*6*d.k).toFixed(1) + 'deg)';
+      });
+      requestAnimationFrame(fx);
+    })(performance.now());
+  }
+
+  var h = location.hash.slice(1); if (h && document.getElementById(h)) setTimeout(function(){ document.getElementById(h).scrollIntoView(); }, 60);
+})();
+</script>
+
+</body></html>
