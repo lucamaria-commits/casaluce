@@ -183,17 +183,8 @@ section > .wrap{z-index:1}
 .o-text{position:relative;margin:0;max-width:none;font-family:var(--display);font-size:clamp(40px,7vw,100px);font-style:italic;opacity:clamp(0, calc((var(--q) - .6) * 3.5), 1);transform:translateY(calc((1 - var(--q)) * 60px));text-align:center;color:#F6EADB;text-shadow:0 0 40px rgba(242,166,90,.5)}
 
 @media (prefers-reduced-motion: reduce){
-  .inter{height:auto!important}
-  .inter .stage{position:relative}
-  #glare{--q:.35;--t:1}
-  #orbits{--q:1}
-  .chars .ch{transform:none;opacity:1;filter:none}
   html{scroll-behavior:auto}
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  [data-sc]{--p:1!important}
-  .hero .wrap{transform:none;opacity:1;filter:none}
-  .fill .w{opacity:1}
-  .sheet li.dim{opacity:1;transform:none}
+  .g-flash{display:none}
 }
 </style>
 
@@ -408,7 +399,7 @@ section > .wrap{z-index:1}
 
 <script>
 (function(){
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduce = false;
   var root = document.documentElement;
   var clamp = function(v,a,b){return v<a?a:v>b?b:v};
 
