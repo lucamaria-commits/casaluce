@@ -25,7 +25,7 @@ h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,5vw,58px);lin
 h3{font-size:19px;font-weight:600}
 p{margin:0;max-width:65ch}
 .eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
-section{padding-block:clamp(72px,11vw,128px);position:relative}
+section{padding-block:clamp(72px,11vw,128px);position:relative;overflow:clip}
 section > .wrap{display:flex;flex-direction:column;gap:28px;position:relative}
 .lead{font-size:clamp(18px,2vw,21px)}
 
@@ -148,7 +148,46 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 footer{background:var(--night);color:#9A8F97;padding-block:56px;text-align:center}
 footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 
+/* ---------- titoli che si ricompongono lettera per lettera ---------- */
+section > .wrap{z-index:1}
+.split .wd{display:inline-block;white-space:nowrap}
+.split .ch{display:inline-block;transform:translate3d(calc((1 - var(--p)) * var(--dx)),calc((1 - var(--p)) * var(--dy)),0) rotate(calc((1 - var(--p)) * var(--r))) scale(calc(1 + (1 - var(--p)) * var(--s)));opacity:calc(.08 + .92 * var(--p));filter:blur(calc((1 - var(--p)) * 5px))}
+
+/* forme che fluttuano in parallasse */
+.deco{position:absolute;pointer-events:none;z-index:0;will-change:transform}
+
+/* ---------- interludi: pura estetica ---------- */
+.inter{position:relative;background:#120E1A;color:#F2E6D3}
+.inter .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center}
+
+#shatter{height:300vh;--q:0;--e:0}
+#shatter .stage{background:radial-gradient(ellipse at 50% 50%, hsl(calc(18 + var(--q) * 30) 55% calc(14% + var(--e) * 10%)) 0%, #120E1A 70%)}
+.shards{display:flex;gap:.04em;font-family:var(--display);font-weight:600;font-size:clamp(110px,24vw,340px);line-height:1;position:relative}
+.letter{position:relative;display:inline-block}
+.letter .base{visibility:hidden}
+.sl{position:absolute;inset:0;background:linear-gradient(180deg,#FBE0A8,#F2A65A 45%,#E0782C 75%,#C25A2A);-webkit-background-clip:text;background-clip:text;color:transparent;transform:translate3d(calc(var(--e) * var(--dx)),calc(var(--e) * var(--dy)),0) rotate(calc(var(--e) * var(--r))) scale(calc(1 + var(--e) * var(--s)));will-change:transform}
+.bit{position:absolute;left:50%;top:50%;width:var(--sz);height:var(--sz);background:var(--c);border-radius:var(--br);transform:translate3d(calc(var(--e) * var(--dx)),calc(var(--e) * var(--dy)),0) rotate(calc(var(--e) * var(--r))) scale(var(--e));opacity:var(--e);box-shadow:0 0 18px var(--c)}
+.cap{position:absolute;bottom:12vh;left:0;right:0;text-align:center;font-family:var(--display);font-style:italic;font-size:clamp(20px,2.4vw,28px);color:#E6D9CB;opacity:calc(1 - var(--e) * 1.6);letter-spacing:.06em;margin:0 auto}
+
+#glare{height:260vh;--q:0;--f:0;--t:0}
+#glare .stage{background:#0E0B14}
+.g-rays{position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg, rgba(242,166,90,0) 0deg 6deg, rgba(242,166,90,.14) 6deg 8deg);transform:rotate(calc(var(--q) * 240deg)) scale(calc(.5 + var(--q) * 1.2));opacity:calc(.15 + var(--q) * .85);-webkit-mask-image:radial-gradient(circle,#000 0%,transparent 55%);mask-image:radial-gradient(circle,#000 0%,transparent 55%)}
+.g-sun{position:absolute;width:30vmin;height:30vmin;border-radius:50%;background:radial-gradient(circle,#FFF6E0 0%,#FBE0A8 25%,#F2A65A 50%,rgba(224,120,44,0) 72%);transform:scale(calc(.3 + var(--q) * var(--q) * 8))}
+.g-ghost{position:absolute;border-radius:50%;left:50%;top:50%;width:var(--w);height:var(--w);margin:calc(var(--w) / -2) 0 0 calc(var(--w) / -2);background:radial-gradient(circle, var(--c), transparent 70%);border:1px solid rgba(255,230,190,.22);transform:translate3d(calc((var(--q) - .45) * var(--k) * 70vw),calc((var(--q) - .45) * var(--k) * -45vh),0);mix-blend-mode:screen;opacity:calc(1 - var(--f))}
+.g-flash{position:absolute;inset:0;background:radial-gradient(circle,#FFFBF2 0%,#FBE0A8 45%,rgba(242,166,90,.5) 90%);opacity:var(--f);pointer-events:none}
+.g-text{position:relative;margin:0;max-width:none;font-family:var(--display);font-style:italic;font-size:clamp(44px,8vw,116px);color:color-mix(in srgb, #1F1A2E calc(var(--f) * 100%), #F6EADB);letter-spacing:calc(var(--t) * .12em - .06em);opacity:var(--t);transform:scale(calc(.8 + var(--t) * .2));text-align:center;filter:blur(calc((1 - var(--t)) * 10px))}
+
+#orbits{height:300vh;--q:0}
+#orbits .stage{background:radial-gradient(ellipse at 50% 55%, #2A1E2E 0%, #120E1A 70%)}
+#orbits canvas{position:absolute;inset:0;width:100%;height:100%}
+.o-text{position:relative;margin:0;max-width:none;font-family:var(--display);font-size:clamp(40px,7vw,100px);font-style:italic;opacity:clamp(0, calc((var(--q) - .6) * 3.5), 1);transform:translateY(calc((1 - var(--q)) * 60px));text-align:center;color:#F6EADB;text-shadow:0 0 40px rgba(242,166,90,.5)}
+
 @media (prefers-reduced-motion: reduce){
+  .inter{height:auto!important}
+  .inter .stage{position:relative}
+  #glare{--q:.35;--t:1}
+  #orbits{--q:1}
+  .split .ch{transform:none;opacity:1;filter:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
   [data-sc]{--p:1!important}
@@ -189,7 +228,7 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 <section id="visione">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>La visione</p>
-    <h2 class="rv" data-sc>Un luogo, una comunità, un movimento</h2>
+    <h2 data-sc data-split>Un luogo, una comunità, un movimento</h2>
     <p class="big-line fill" data-fill>Un members club che non seleziona per reddito o per fama, ma per affinità di pensiero. Il primo Casa Luce apre entro settembre 2027.</p>
     <div class="grid">
       <div class="card rv" data-sc data-d="0"><h3 class="big">Il luogo</h3><p>Una catena di hotel polifunzionali. Si dorme, si mangia, ci si allena, si fa festa: ogni struttura è un motore che attira persone e le fa incontrare.</p></div>
@@ -199,10 +238,17 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
   </div>
 </section>
 
+<div class="inter" id="shatter" aria-hidden="true">
+  <div class="stage">
+    <div class="shards" id="shards"></div>
+    <p class="cap">la luce si scompone, e torna intera</p>
+  </div>
+</div>
+
 <section id="luogo" class="band">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>Il luogo</p>
-    <h2 class="rv" data-sc>Un hotel dove succedono più cose</h2>
+    <h2 data-sc data-split>Un hotel dove succedono più cose</h2>
     <p class="lead rv" data-sc>Un posto vivo e festoso, non un ritiro. L’alcol c’è, la musica pure: il benessere non diventa moralismo, e ognuno vive il luogo a modo suo.</p>
     <div class="grid">
       <div class="card rv" data-sc data-d="0"><h3>Area house</h3><p>Il salotto della comunità: si lavora, si chiacchiera, si conoscono persone.</p></div>
@@ -250,10 +296,20 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
   </div>
 </section>
 
+<div class="inter" id="glare" aria-hidden="true">
+  <div class="stage">
+    <div class="g-rays"></div>
+    <div class="g-sun"></div>
+    <div id="ghosts"></div>
+    <div class="g-flash"></div>
+    <p class="g-text">Io la penso così.</p>
+  </div>
+</div>
+
 <section id="comunita">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>La comunità</p>
-    <h2 class="rv" data-sc>Si entra aderendo al Manifesto, non per reddito</h2>
+    <h2 data-sc data-split>Si entra aderendo al Manifesto, non per reddito</h2>
     <div class="split">
       <div class="rows">
         <div class="row rv-x" data-sc data-d="0"><strong>Chi la frequenta</strong><p>Persone che curano il benessere e la longevità, con una spiritualità propria e non religiosa, una visione ampia della vita e un’apertura verso ogni provenienza. Il pubblico di Burning Man e dei grandi festival ne è un buon ritratto.</p></div>
@@ -274,14 +330,14 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 <section id="modello" class="band">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>Prezzi e modello di business</p>
-    <h2 class="rv" data-sc>Lo stesso prodotto su più fasce, perché tutti possano esserci</h2>
+    <h2 data-sc data-split>Lo stesso prodotto su più fasce, perché tutti possano esserci</h2>
     <div class="prices">
       <div class="price" data-sc style="--lift:30px"><strong>€8</strong><span>Gin tonic con Beefeater</span></div>
       <div class="price" data-sc style="--lift:70px"><strong>€15</strong><span>Gin tonic con Tanqueray Ten</span></div>
       <div class="price top" data-sc style="--lift:110px"><strong>€25</strong><span>Gin tonic con gin artigianale</span></div>
     </div>
     <p class="rv" data-sc>Stesso principio per camere (budget, 3 stelle, 5 stelle), cucina e affitti lunghi. Prezzi legati al costo del prodotto e differenze marcate tra le fasce. I prezzi del bar sono esempi indicativi.</p>
-    <h2 class="rv" data-sc style="margin-top:40px">Prima si valida il format, poi si cresce in gestione</h2>
+    <h2 data-sc data-split style="margin-top:40px">Prima si valida il format, poi si cresce in gestione</h2>
     <div class="phases">
       <div class="card rv" data-sc data-d="0"><span class="k">Fase 1 · Il prototipo</span><h3>Il primo Casa Luce</h3><p>Lo finanziano privati che credono nel progetto a lungo termine, come in un super pre-seed. I soldi servono soprattutto a farlo conoscere.</p></div>
       <div class="arrow" data-sc data-range="0.85,0.5" aria-hidden="true"></div>
@@ -294,7 +350,7 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 <section id="ecosistema">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>L’ecosistema · visione di lungo periodo</p>
-    <h2 class="rv" data-sc>Dall’albergo a un ambiente di vita</h2>
+    <h2 data-sc data-split>Dall’albergo a un ambiente di vita</h2>
     <div class="rows">
       <div class="row rv-x" data-sc><strong>Più case per città</strong><p>Hotel, case vacanze ed extra-alberghiero, accessibili solo a chi fa parte della comunità.</p></div>
       <div class="row rv-x" data-sc><strong>Abitare</strong><p>Case in affitto anche per anni, in tre categorie. Anche un romano può vivere in una Casa Luce.</p></div>
@@ -307,10 +363,17 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
   </div>
 </section>
 
+<div class="inter" id="orbits" aria-hidden="true">
+  <div class="stage">
+    <canvas id="orbit-cv"></canvas>
+    <p class="o-text">Un mondo unico.</p>
+  </div>
+</div>
+
 <section id="percorso" class="band">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>Il percorso</p>
-    <h2 class="rv" data-sc>Prima la comunità, poi il luogo</h2>
+    <h2 data-sc data-split>Prima la comunità, poi il luogo</h2>
     <div class="steps">
       <div class="step" data-sc data-range="0.95,0.55"><span class="k">Scrivere</span><p>Il Manifesto, subito: i pensieri che riteniamo giusti, quelli della nostra cerchia.</p></div>
       <div class="step" data-sc data-range="0.9,0.5"><span class="k">Divulgare</span><p>Contenuti costanti su Instagram: una pagina principale in inglese e una per ogni paese.</p></div>
@@ -324,7 +387,7 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
 <section id="prossimi">
   <div class="wrap">
     <p class="eyebrow rv" data-sc>Prossimi passi</p>
-    <h2 class="rv" data-sc>Si parte dal Manifesto: tutto il resto dipende da lui</h2>
+    <h2 data-sc data-split>Si parte dal Manifesto: tutto il resto dipende da lui</h2>
     <div class="checks">
       <div class="card rv" data-sc data-d="0"><h3>Manifesto e voce</h3><ul><li>Scrivere la prima bozza</li><li>Aprire le pagine Instagram</li><li>Decidere: per nazione o per lingua</li></ul></div>
       <div class="card rv" data-sc data-d="1"><h3>Prodotto e comunità</h3><ul><li>Spazi e dimensioni</li><li>Regole di adesione</li><li>Nomi e prezzi delle fasce</li></ul></div>
@@ -460,6 +523,148 @@ footer .wrap{align-items:center;display:flex;flex-direction:column;gap:12px}
       if (!reduce) requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
+  }
+
+  /* ================= effetti extra ================= */
+  var s2 = 11; function R(){ s2 = (s2*48271) % 2147483647; return s2/2147483647; }
+  function rr(a,b){ return a + R()*(b-a); }
+
+  /* titoli: ogni lettera parte da un punto diverso e si ricompone */
+  [].slice.call(document.querySelectorAll('[data-split]')).forEach(function(h){
+    h.classList.add('split');
+    var words = h.textContent.trim().split(/\s+/);
+    h.setAttribute('aria-label', h.textContent.trim());
+    h.innerHTML = words.map(function(w){
+      return '<span class="wd" aria-hidden="true">' + w.split('').map(function(c){
+        return '<span class="ch" style="--dx:'+rr(-140,140).toFixed(0)+'px;--dy:'+rr(-90,90).toFixed(0)+'px;--r:'+rr(-110,110).toFixed(0)+'deg;--s:'+rr(-.4,1.2).toFixed(2)+'">'+c+'</span>';
+      }).join('') + '</span>';
+    }).join(' ');
+  });
+
+  /* forme decorative in parallasse nelle sezioni chiare */
+  var shapeSvg = [
+    '<svg width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="none" stroke="#E0782C" stroke-width="1.5" opacity=".45"/></svg>',
+    '<svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="#F2A65A" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" opacity=".7"/></svg>',
+    '<svg width="140" height="70" viewBox="0 0 140 70"><path d="M0 70 A70 70 0 0 1 140 70 Z" fill="#F2A65A" opacity=".22"/></svg>',
+    '<svg width="120" height="120" viewBox="0 0 120 120"><path d="M60 8 L112 104 L8 104 Z" fill="none" stroke="#C25A2A" stroke-width="1.5" opacity=".4"/></svg>',
+    '<svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="40" fill="#E0782C" opacity=".12"/></svg>'
+  ];
+  var decos = [];
+  [].slice.call(document.querySelectorAll('section[id]:not(.band)')).forEach(function(sec){
+    for (var i=0;i<3;i++){
+      var d = document.createElement('div'); d.className = 'deco'; d.setAttribute('aria-hidden','true');
+      d.innerHTML = shapeSvg[Math.floor(R()*shapeSvg.length)];
+      d.style.left = (R()<.5 ? rr(-4,18) : rr(72,94)) + '%';
+      d.style.top = rr(5,85) + '%';
+      sec.insertBefore(d, sec.firstChild);
+      decos.push({el:d, sec:sec, k:rr(-.35,.35), rot:rr(-.25,.25), ph:rr(0,6.28)});
+    }
+  });
+
+  /* interludio 1: LUCE che si frantuma */
+  var shards = document.getElementById('shards');
+  var palette = ['#FBE0A8','#F2A65A','#E0782C','#C25A2A','#F6EADB'];
+  'LUCE'.split('').forEach(function(ch){
+    var L = document.createElement('span'); L.className = 'letter';
+    var inner = '<span class="base">'+ch+'</span>';
+    var n = 6;
+    for (var i=0;i<n;i++){
+      var top = (i*100/n).toFixed(1), bot = (100 - (i+1)*100/n).toFixed(1);
+      inner += '<span class="sl" style="clip-path:inset('+top+'% -10% '+bot+'% -10%);--dx:'+rr(-38,38).toFixed(1)+'vw;--dy:'+rr(-38,38).toFixed(1)+'vh;--r:'+rr(-160,160).toFixed(0)+'deg;--s:'+rr(-.3,.8).toFixed(2)+'">'+ch+'</span>';
+    }
+    L.innerHTML = inner; shards.appendChild(L);
+  });
+  for (var b=0;b<46;b++){
+    var bit = document.createElement('span'); bit.className = 'bit';
+    var sz = rr(5,26);
+    bit.style.cssText = '--sz:'+sz.toFixed(0)+'px;--c:'+palette[b%5]+';--br:'+(R()<.4?'50%':(R()<.5?'2px':'0'))+';--dx:'+rr(-55,55).toFixed(1)+'vw;--dy:'+rr(-48,48).toFixed(1)+'vh;--r:'+rr(-400,400).toFixed(0)+'deg';
+    shards.appendChild(bit);
+  }
+
+  /* interludio 2: riflessi della lente */
+  var ghosts = document.getElementById('ghosts');
+  [[180,'rgba(242,166,90,.35)',1.2],[60,'rgba(251,224,168,.6)',.6],[110,'rgba(224,120,44,.25)',-.4],[34,'rgba(255,240,210,.7)',-.9],[240,'rgba(194,90,42,.18)',-1.6],[80,'rgba(242,166,90,.3)',2.1]].forEach(function(g){
+    var d = document.createElement('span'); d.className = 'g-ghost';
+    d.style.cssText = '--w:'+g[0]+'px;--c:'+g[1]+';--k:'+g[2];
+    ghosts.appendChild(d);
+  });
+
+  /* interludio 3: orbite di forme che dal caos diventano un sole */
+  var oc = document.getElementById('orbit-cv'), ox = oc.getContext && oc.getContext('2d'), OW=0, OH=0;
+  var odpr = Math.min(window.devicePixelRatio||1, 2);
+  function osize(){ OW = oc.clientWidth; OH = oc.clientHeight; oc.width = OW*odpr; oc.height = OH*odpr; if(ox) ox.setTransform(odpr,0,0,odpr,0,0); }
+  osize(); window.addEventListener('resize', osize);
+  var shapes = [], kinds = ['ring','dot','tri','arc','bar','sq'], rings = [9,15,22,30];
+  rings.forEach(function(cnt, ri){
+    for (var j=0;j<cnt;j++) shapes.push({ring:ri, idx:j, cnt:cnt, kind:kinds[Math.floor(R()*kinds.length)],
+      cx:rr(-.7,.7), cy:rr(-.6,.6), sp:rr(.2,.9), ph:rr(0,6.28), amp:rr(.04,.14), sz:rr(4,13), rot:rr(0,6.28), vr:rr(-1.5,1.5), col:palette[Math.floor(R()*5)]});
+  });
+  function easeOutBack(x){ var c1=1.4, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+  function drawOrbits(t, q){
+    if (!ox) return;
+    ox.clearRect(0,0,OW,OH);
+    var m = easeOutBack(clamp((q-.12)/.62,0,1)), M = Math.min(OW,OH), cxp = OW/2, cyp = OH/2;
+    var glow = ox.createRadialGradient(cxp,cyp,0,cxp,cyp,M*.16*(.2+m));
+    glow.addColorStop(0,'rgba(255,236,200,'+(.9*m).toFixed(3)+')'); glow.addColorStop(.4,'rgba(242,166,90,'+(.45*m).toFixed(3)+')'); glow.addColorStop(1,'rgba(224,120,44,0)');
+    ox.fillStyle = glow; ox.beginPath(); ox.arc(cxp,cyp,M*.16*(.2+m),0,6.283); ox.fill();
+    shapes.forEach(function(s){
+      var chx = s.cx + Math.sin(t*s.sp + s.ph)*s.amp + Math.cos(t*s.sp*.7 + s.ph*2)*s.amp*.6;
+      var chy = s.cy + Math.cos(t*s.sp*1.3 + s.ph)*s.amp;
+      var ang = s.idx/s.cnt*6.283 + t*.12*(s.ring%2?1:-1) + q*1.5*(s.ring%2?-1:1);
+      var rad = .17 + s.ring*.085;
+      var tx = Math.cos(ang)*rad, ty = Math.sin(ang)*rad;
+      var x = cxp + (chx + (tx-chx)*m) * M, y = cyp + (chy + (ty-chy)*m) * M;
+      var rot = s.rot + t*s.vr*(1-m*.7) + ang*m;
+      ox.save(); ox.translate(x,y); ox.rotate(rot);
+      ox.strokeStyle = s.col; ox.fillStyle = s.col; ox.lineWidth = 1.6; ox.globalAlpha = .55 + .45*m;
+      var z = s.sz;
+      if (s.kind==='ring'){ ox.beginPath(); ox.arc(0,0,z,0,6.283); ox.stroke(); }
+      else if (s.kind==='dot'){ ox.beginPath(); ox.arc(0,0,z*.45,0,6.283); ox.fill(); }
+      else if (s.kind==='tri'){ ox.beginPath(); ox.moveTo(0,-z); ox.lineTo(z*.87,z*.5); ox.lineTo(-z*.87,z*.5); ox.closePath(); ox.stroke(); }
+      else if (s.kind==='arc'){ ox.beginPath(); ox.arc(0,0,z,0,3.1416); ox.stroke(); }
+      else if (s.kind==='bar'){ ox.fillRect(-z,-1,z*2,2); }
+      else { ox.strokeRect(-z*.6,-z*.6,z*1.2,z*1.2); }
+      ox.restore();
+    });
+    ox.globalAlpha = 1;
+  }
+
+  var shatterEl = document.getElementById('shatter'), glareEl = document.getElementById('glare'), orbitsEl = document.getElementById('orbits');
+  function qOf(el){ var r = el.getBoundingClientRect(), vh = window.innerHeight; return clamp(-r.top/Math.max(r.height - vh,1),0,1); }
+  function visible(el){ var r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; }
+
+  if (reduce){ drawOrbits(0,1); }
+  else {
+    var tStart = performance.now();
+    (function fx(now){
+      var t = (now - tStart)/1000, vh = window.innerHeight;
+      if (visible(shatterEl)){
+        var q1 = qOf(shatterEl), x = clamp((q1-.12)/.76,0,1);
+        var e = Math.pow(Math.sin(x*Math.PI),1.25);
+        shatterEl.style.setProperty('--q', q1.toFixed(3));
+        shatterEl.style.setProperty('--e', e.toFixed(3));
+      }
+      if (visible(glareEl)){
+        var q2 = qOf(glareEl);
+        var f = Math.exp(-Math.pow((q2-.6)/.09,2));
+        var tt = clamp((q2-.5)/.16,0,1);
+        glareEl.style.setProperty('--q', q2.toFixed(3));
+        glareEl.style.setProperty('--f', f.toFixed(3));
+        glareEl.style.setProperty('--t', tt.toFixed(3));
+      }
+      if (visible(orbitsEl)){
+        var q3 = qOf(orbitsEl);
+        orbitsEl.style.setProperty('--q', q3.toFixed(3));
+        drawOrbits(t, q3);
+      }
+      decos.forEach(function(d){
+        var r = d.sec.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        var off = (r.top + r.height/2 - vh/2);
+        d.el.style.transform = 'translate3d(' + (Math.sin(t*.4 + d.ph)*12).toFixed(1) + 'px,' + (off*d.k).toFixed(1) + 'px,0) rotate(' + (off*d.rot + t*6*d.k).toFixed(1) + 'deg)';
+      });
+      requestAnimationFrame(fx);
+    })(performance.now());
   }
 
   var h = location.hash.slice(1); if (h && document.getElementById(h)) setTimeout(function(){ document.getElementById(h).scrollIntoView(); }, 60);
